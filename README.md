@@ -10,4 +10,6 @@ Imagine to have a `is_admin` boolean column on `users` table. Business requireme
 
 ### Fields type
 
-- ExclusiveBoolean. It presents to user using a standard Laravel Nova Boolean field (aka checkbox)
+- ExclusiveBoolean. It presents to user using a standard Laravel Nova Boolean field - In order to mantain data consistency you should set this field as not nullable.
+
+- ExclusiveSelect. It presents to user using a standard Laravel Nova Select field - In order to mantain data consistency you should set this field as nullable.

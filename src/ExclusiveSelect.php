@@ -2,19 +2,22 @@
 
 namespace AlbertoBottarini\NovaExclusiveFields;
 
-use Laravel\Nova\Fields\Boolean;
+use DB;
+use Laravel\Nova\Fields\Select;
 use Laravel\Nova\Http\Requests\NovaRequest;
 
-class ExclusiveBoolean extends Boolean
+class ExclusiveSelect extends Select
 {
     protected function fillAttributeFromRequest(NovaRequest $request, $requestAttribute, $model, $attribute)
     {
         parent::fillAttributeFromRequest($request, $requestAttribute, $model, $attribute);
 
-        $model::saved(function ($model) use ($attribute) {
+        $value = $this->value;
+
+        $model::saved(function ($model) use ($attribute, $value) {
             $model::where($model->getKeyName(), '<>', $model->getKey())
-                ->where($attribute, $this->trueValue)
-                ->update([$attribute => $this->falseValue]);
+                ->where($attribute, $value)
+                ->update([$attribute => DB::raw('null')]);
         });
     }
 }
