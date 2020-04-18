@@ -11,10 +11,14 @@ class ExclusiveBoolean extends Boolean
     {
         parent::fillAttributeFromRequest($request, $requestAttribute, $model, $attribute);
 
-        $model::saved(function ($model) use ($attribute) {
-            $model::where($model->getKeyName(), '<>', $model->getKey())
-                ->where($attribute, $this->trueValue)
-                ->update([$attribute => $this->falseValue]);
-        });
+        $value = $request[$requestAttribute];
+
+        if ($value == $this->trueValue) {
+            $model::saved(function ($model) use ($attribute) {
+                $model::where($model->getKeyName(), '<>', $model->getKey())
+                    ->where($attribute, $this->trueValue)
+                    ->update([$attribute => $this->falseValue]);
+            });
+        }
     }
 }

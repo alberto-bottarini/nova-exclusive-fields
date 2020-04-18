@@ -12,12 +12,14 @@ class ExclusiveSelect extends Select
     {
         parent::fillAttributeFromRequest($request, $requestAttribute, $model, $attribute);
 
-        $value = $this->value;
+        $value = $request[$requestAttribute];
 
-        $model::saved(function ($model) use ($attribute, $value) {
-            $model::where($model->getKeyName(), '<>', $model->getKey())
-                ->where($attribute, $value)
-                ->update([$attribute => DB::raw('null')]);
-        });
+        if (!$this->isNullValue($value)) {
+            $model::saved(function ($model) use ($attribute, $value) {
+                $model::where($model->getKeyName(), '<>', $model->getKey())
+                    ->where($attribute, $value)
+                    ->update([$attribute => DB::raw('null')]);
+            });
+        }
     }
 }
